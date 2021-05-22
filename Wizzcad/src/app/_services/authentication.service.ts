@@ -10,7 +10,7 @@ export class AuthenticationService {
     public currentUser: Observable<User>;
 
     constructor(private http: HttpClient) {
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+        this.currentUserSubject = new BehaviorSubject<User>(null);
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
@@ -20,10 +20,9 @@ export class AuthenticationService {
 
     login(username: string, password: string) {
         return this.http.get<User>(`http://dev4.wizzcad.com:8081/logins?login=${username}&password=${password}`).pipe(map(user => {
-            
             // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            this.currentUserSubject.next(user);
+            localStorage.setItem('currentUser', JSON.stringify(user[0]));
+            this.currentUserSubject.next(user[0]);
             return user;
         }));
     }
@@ -32,5 +31,11 @@ export class AuthenticationService {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
         this.currentUserSubject.next(null);
+    }
+
+    getDatas() {
+        return this.http.get<any[]>(`http://dev4.wizzcad.com:8081/${this.currentUserValue.token}`).pipe(map(datas => {
+            return datas;
+        }));
     }
 }

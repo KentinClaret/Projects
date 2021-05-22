@@ -7,9 +7,9 @@ import { AuthenticationService } from '../_services/authentication.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
 
-  loggedToken: string;
+  datas: any[] = [];
 
   constructor(private route: ActivatedRoute,
     private authenticationService: AuthenticationService,
@@ -17,11 +17,11 @@ export class HomeComponent implements OnInit {
      // redirect to login if not logged it
      if (!this.authenticationService.currentUserValue) { 
       this.router.navigate(['/login']);
+    } else {
+      this.authenticationService.getDatas().subscribe(datas => {
+        console.log(datas)
+        this.datas = datas;
+      });
     }
   }
-
-  ngOnInit(): void {
-    this.authenticationService.currentUserValue
-  }
-
 }
