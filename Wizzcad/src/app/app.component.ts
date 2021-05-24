@@ -9,14 +9,14 @@ import { AuthenticationService } from './_services/authentication.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  currentUser: User;
+  currentUser: User = null;
 
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService
   ) {
-    this.authenticationService.currentUser.subscribe(x => {
-      this.currentUser = x
+    this.authenticationService.currentUser.subscribe(user => {
+      this.currentUser = user
     });
    }
 
